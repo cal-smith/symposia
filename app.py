@@ -1,6 +1,5 @@
 from bottle import *
 from routes import main
-from models import user, categories, posts
 
 root = Bottle()
 @root.route('/<file>')
