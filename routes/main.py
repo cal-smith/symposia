@@ -4,50 +4,54 @@ import json
 
 app = Bottle()
 
-@app.get('/')
 @view('index')
-def index():#list all categories
+def index():#list all categories(GET)
 	cat = categories.all()
 	return dict(name=json.dumps(cat))
 
-@app.post('/new')
-def new_category():#add a category (move to routes/admin.py?)
+def new_category():#add a category (move to routes/admin.py?)(POST)
 	name = request.query.name
 	description = request.query.description
 	categories.add(name, description)
 	return 'True'
 
-@app.get('/<category>')
-def category(category):#get all posts from a category
+def login():#get the login/reg page(GET)
+	return template('<p>{{login}}</p>', login='login')
+
+def do_login():#do login(POST)
+	#if
+	redirect('/')
+	#else {error: error details}
+
+def register():#do register(POST)
+	#if
+	redirect('/')
+	#else {error: error details}
+
+def category(category):#get all posts from a category(GET)
+	print "this should do nothing on /login"
 	post = posts.all(category)
 	return template('{{category}}', category=json.dumps(post))
 
-@app.post('/<category>/new')
-def new_post(category):#add post to category
+def post(category, post):#get op and replys from a category(GET)
+	post = posts.post(post, category)
+	return template('{{post}}', post=json.dumps(post))
+
+def new_post(category):#add post to category(POST)
 	title = request.query.title
 	md = request.query.md
 	userid = 0 #user.userid
 	posts.add(userid, title, md, category)
 	return 'True'
 
-@app.get('/<category>/<post>')
-def post(category, post):#get op and replys from a category
-	post = posts.post(post, category)
-	return template('{{post}}', post=json.dumps(post))
+def routing(app):
+	app.route('/', 'GET', index)
+	app.route('/new', 'POST', new_category)
+	app.route('/login', 'GET', login)
+	app.route('/login', 'POST', do_login)
+	app.route('/register', 'POST', register)
+	app.route('/<category>', 'GET', category)
+	app.route('/<category>/<post>', 'GET', post)
+	app.route('/<category>/new', 'POST', new_post)
 
-@app.get('/login')
-def login():#get the login/reg page
-	return template('<p>login</p>')
-
-@app.post('/login')
-def do_login():#do login
-	pass
-	#if
-	redirect('/')
-	#else {error: error details}
-
-@app.post('/register')
-def register():#do register
-	#if
-	redirect('/')
-	#else {error: error details}
+routing(app)
