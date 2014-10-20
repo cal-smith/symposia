@@ -23,9 +23,14 @@ def check(username, password):
 		#return some kind of error: {error: username or password blah blah}
 		return False
 
-def info():
+def info(username):
 	#userid, tokens, other things
-	pass
+	user = session.query(Users).filter(Users.username == username).first()
+	print 'user', user
+	res = {'username':user.username,
+			'id':user.id,
+			'mode':user.mode}
+	return res
 
 def ban():
 	#so yeah we kinda need this

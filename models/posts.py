@@ -29,6 +29,17 @@ def post(postid, category):
 								'username': user.username})
 	return res
 
+def next(postid, category, next=True):
+	if next:
+		#next post as ordered by date
+		op = session.query(Posts, Users).\
+		filter(Users.id == Posts.userid).\
+		filter(Posts.postid == postid, Posts.category == category).first()#.next()?
+		pass
+	else:
+		#previous post as orderd by date
+		pass
+
 def add(userid, title, md, category):
 	postid = str(uuid4())
 	post = Posts(postid=postid, userid=userid, title=title, md=md, category=category)#html, posted
