@@ -17,11 +17,12 @@ def post(category, post):#get op and replys from a category(GET)
 	return template('{{post}}', post=json.dumps(post))
 
 def next_post(category, post, next):
-	if next is "next":
+	if next == "next":
 		post = posts.next(post, category)
-	elif next is "last":
+		return template('{{post}}', post=json.dumps(post))
+	elif next == "last":
 		post = posts.next(post, category, False)
-	return template('{{post}}', post=json.dumps(post))
+		return template('{{post}}', post=json.dumps(post))
 
 def new_post(category):#add post to category(POST)
 	title = request.query.title

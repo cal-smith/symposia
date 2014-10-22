@@ -33,9 +33,24 @@ def next(postid, category, next=True):
 	if next:
 		#next post as ordered by date
 		op = session.query(Posts, Users).\
-		filter(Users.id == Posts.userid).\
-		filter(Posts.postid == postid, Posts.category == category).first()#.next()?
-		pass
+			filter(Users.id == Posts.userid).\
+			filter(Posts.postid == postid, Posts.category == category).first()#.next()?
+		print 'test', op[0].postid
+		#postid = w/e the next postid is
+		res = {'title': op[0].title, 
+			'md': op[0].md, 
+			'html': op[0].html, 
+			'userid': op[1].id,
+			'username': op[1].username,
+			'replies': []}
+		for reply, user in session.query(Replies, Users).\
+					filter(Users.id == Replies.userid).\
+					filter(Replies.postid == postid).limit(25):
+			res['replies'].append({'md': reply.md, 
+									'html': reply.html,
+									'userid': user.id,
+									'username': user.username})
+		return res
 	else:
 		#previous post as orderd by date
 		pass
